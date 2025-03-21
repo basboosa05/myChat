@@ -292,9 +292,9 @@ body {
     max-height: 450px;
     overflow-y: auto;
   }
-  :is(.list-contents .chat-area)::-webkit-scrollbar{
-    width: 0px;
-  }
+   :is(.list-contents, .chat-area)::-webkit-scrollbar{
+    width: 0;
+  } 
 
   /* chat window Yarab */
   .chat-window {
