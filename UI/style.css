@@ -1,0 +1,393 @@
+/* .root define gowa some colors maslan aw 7agat transitions  */
+
+:root{
+    --tran-03: all 0.3s ease;
+    --tran-04: all 0.4s ease;
+    --tran-05: all 0.5s ease;
+}
+@font-face{
+    font-family: homefont;
+    src: url(Fonts/Poppins-Regular.ttf);
+}
+
+@font-face{
+    font-family: headfont;
+    src: url(Fonts/Ramsha.otf);
+}
+
+
+* {
+    
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    font-size: 30px;
+    font-family: headfont;
+    background-color: #f7f7f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Page Container */
+.page-container {
+    width: 90%; /* Adjust width as needed */
+    max-width: 1200px; /* Maximum width */
+    height: 90vh; /* Adjust height as needed */
+    background-color: white;
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Shadow */
+    overflow: hidden; /* Ensures content stays within the container */
+    display: flex;
+    margin: 0; /* Ensure no margin */
+    padding: 0; /* Ensure no padding */
+}
+
+.sidebar {
+    width: 250px;
+    background-color: rgb(0, 109, 119);
+    padding: 10px 14px;
+    height: 100%;
+    transition: var(--tran-04);
+    margin: 0; /* Ensure no margin */
+}
+
+.sidebar.close{
+    width:78px;
+
+}
+
+.sidebar.close .text{
+    opacity: 0;
+    transition: var(--tran-04); /* Smooth transition for opacity */
+}
+.sidebar li{
+    height:50px;
+    list-style: none;
+    display:flex;
+    align-items:center;
+    margin-top: 30px;
+    transition: var(--tran-04); /* Smooth transition for opacity */
+
+}
+.sidebar li .icon{
+    min-width: 40px;
+    font-size:30px;
+}
+
+.sidebar li .icon,
+.sidebar li .text{
+    color:white;
+}
+
+.sidebar .text {
+    font-size: 30px;
+    font-weight: 500; /* Fixed font-weight */
+    color: white;
+    transition: var(--tran-04);
+    white-space: nowrap;
+    opacity: 1;
+}
+
+
+.sidebar .image {
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar .image-text img {
+    width: 40px;
+    border-radius: 50%;
+}
+
+.sidebar header .image-text {
+    display: flex;
+    align-items: center;
+    
+}
+
+.sidebar header .toggle {
+    position: absolute;
+    top: 15%;
+    right: -15px; /* Move toggle to the edge of the sidebar */
+    transform: translateY(-50%) rotate(180deg);
+    height: 30px;
+    width: 30px;
+    background-color: rgb(131, 197, 190);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: rgb(0, 109, 119); /* Arrow color */
+    font-size: 20px;
+    transition: var(--tran-04);
+    cursor: pointer; /* Add pointer cursor for better UX */
+}
+.sidebar.close header .toggle{
+    transform: translateY(-50%);
+}
+.sidebar li a{
+    height: 100%;
+    width: 100%;
+    text-decoration: none;
+    display: flex;
+    align-items:center;
+    transition: var(--tran-04) ;
+    border-radius: 30px;
+    padding: 10px;
+
+
+}
+.sidebar .bottom-content li{
+  
+    margin-top: 120px;
+}
+
+.sidebar li a:hover{
+    background-color: rgb(131, 197, 190);
+}
+
+.home {
+    position: relative;
+    height: 100%;
+    width: calc(100% - 250px);
+    background: rgb(237 246 249);
+    transition: var(--tran-04);
+    margin: 0; /* Ensure no margin */
+    padding: 0px; /* Ensure no padding */
+    overflow: hidden;
+}
+.home #profile-screen,
+.home #friends-screen
+{
+    padding: 15px 20px;
+}
+
+.sidebar.close ~ .home {
+     /* Adjust when sidebar is closed */
+    width: calc(100% - 78px); /* Take up the remaining width */
+}
+
+
+
+.chats-container {
+  
+    display: flex;
+    height: 100%; 
+    border-radius: 15px; /* Match the rounded corners of the parent container */
+    overflow: hidden; /* Ensure child elements respect the rounded corners */
+}
+
+.chats-list, .chat-window {
+    flex: 1; 
+    padding: 10px;
+    height:100vh;
+    
+}
+.chats-list header{
+    display:flex;
+    border-bottom: 1px solid #e6e6e6;
+    padding-bottom: 20px;
+    align-items:center;
+    justify-content: space-between;
+    padding: 10px 20px;
+}
+
+.chats-list {
+    background-color: rgb(237 246 249); 
+}
+
+
+
+
+.list-contents .search {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.list-contents .search input {
+    flex: 1; /* Take up remaining space */
+    height: 42px;
+    font-size: 16px;
+    padding: 0 13px;
+    border: 1px solid #e6e6e6;
+    outline: none;
+    border-radius: 10px 0 0 10px; /* Rounded corners on the left */
+    
+}
+
+.list-contents .search button {
+    width: 47px;
+    height: 42px;
+    font-size: 17px;
+    cursor: pointer;
+    border: 1px solid #e6e6e6; /* Match input border */
+    background: #fff;
+    color: #333;
+    outline: none;
+    border-radius: 0 10px 10px 0; /* Rounded corners on the right */
+}
+
+.list-contents img{
+    
+        height: 50px;
+        width: 50px;
+        object-fit: cover;
+        border-radius: 50%;
+}
+
+.list-contents{
+
+    font-family: homefont;
+    font-size:20px;
+}
+.list-contents a{
+    padding-right: 15px;
+    border-bottom-color: #f1f1f1;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #dad3d3;
+    justify-content: space-between;
+    text-decoration: none;
+    padding: 15px 20px;  
+  }
+
+
+  .list-contents .content{
+    display: flex;
+    align-items: center;
+  }
+  
+   .list-contents .details span{
+    font-size: 18px;
+    font-weight: 500;
+    color: #000;
+    margin-left: 20px;
+  }
+
+  .list-contents a:last-child{
+    margin-bottom: 0px;
+    border-bottom: none;
+    background-color: rgb(255 221 210);
+  }
+ 
+  .list-contents a .messages-dot{
+    font-size: 12px;
+    color: #468669;
+    padding-left: 10px;
+  }
+  .list-contents a .messages-dot.NoMsg{
+    color: #3f3737;
+  }
+  
+  .list-contents{
+    max-height: 450px;
+    overflow-y: auto;
+  }
+  :is(.list-contents .chat-area)::-webkit-scrollbar{
+    width: 0px;
+  }
+
+  /* chat window Yarab */
+  .chat-window {
+    background-color: rgb(255 221 210); 
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    height: 100vh; /* Take full height of the parent */
+    padding: 10px 30px 0 30px; /* Adjust padding */
+    overflow: hidden; /* Prevent scrolling on the parent */
+}
+
+.chat-box {
+    flex: 1; /* Take up remaining space */
+    overflow-y: auto; /* Enable scrolling for chat messages */
+    font-family: homefont;
+    font-size: 18px;
+    padding-bottom: 20px; /* Add padding to avoid overlap */
+}
+
+.chat-box .chat {
+    margin: 15px 0;
+}
+
+.chat-box .chat p {
+    word-wrap: break-word;
+    padding: 8px 16px;
+    box-shadow: 0 0 32px rgb(0 0 0 / 8%),
+                0rem 16px 16px -16px rgb(0 0 0 / 10%);
+}
+
+.chat-box .outgoing {
+    display: flex;
+}
+
+.chat-box .outgoing .details {
+    margin-left: auto;
+    max-width: calc(100% - 130px);
+}
+
+.outgoing .details p {
+    background: #333;
+    color: #fff;
+    border-radius: 18px 18px 0 18px;
+}
+
+.chat-box .incoming {
+    display: flex;
+    align-items: flex-end;
+}
+
+.chat-box .incoming .details {
+    margin-right: auto;
+    margin-left: 10px;
+    max-width: calc(100% - 130px);
+}
+
+.incoming .details p {
+    background: #fff;
+    color: #333;
+    border-radius: 18px 18px 18px 0;
+}
+
+.typing-area {
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.typing-area input {
+    height: 45px;
+    width: calc(100% - 58px);
+    font-size: 16px;
+    padding: 0 13px;
+    border: 1px solid #e6e6e6;
+    outline: none;
+    border-radius: 5px 0 0 5px;
+}
+
+.typing-area button {
+    color: #fff;
+    width: 55px;
+    border: none;
+    outline: none;
+    background: #333;
+    font-size: 19px;
+    cursor: pointer;
+    opacity: 0.7;
+    pointer-events: none;
+    border-radius: 0 5px 5px 0;
+    transition: all 0.3s ease;
+}
+
+.typing-area button.active {
+    opacity: 1;
+    pointer-events: auto;
+}
