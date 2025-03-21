@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>My Chat</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
@@ -11,7 +11,7 @@
             <header>
                 <div class="image-text">
                     <span class="image">
-                        <img src="./Icons/icon.jpg" alt="logo">
+                        <img src="{{ url_for('static', filename='Icons/icon.jpg') }}" alt="logo">
                     </span>
                     <div class="text header-text">
                         <span class="name">My chat</span>
@@ -82,7 +82,7 @@
                             </div>
                             <a href="#" >
                                 <div class="content">
-                                    <img src="profile.jpg" alt="">
+                                    <img src="{{ url_for('static', filename='Icons/profile.jpg') }}" alt="">
                                     <div class="details">
                                         <span>Username</span>
                                     </div>
@@ -94,7 +94,7 @@
                             </a>
                             <a href="#" >
                                 <div class="content">
-                                    <img src="profile.jpg" alt="">
+                                    <img src="{{ url_for('static', filename='Icons/profile.jpg') }}" alt="">
                                     <div class="details">
                                         <span>Username</span>
                                     </div>
@@ -106,7 +106,7 @@
                             </a>
                             <a href="#" >
                                 <div class="content">
-                                    <img src="profile.jpg" alt="">
+                                    <img src="{{ url_for('static', filename='Icons/profile.jpg') }}" alt="">
                                     <div class="details">
                                         <span>Username</span>
                                     </div>
@@ -118,7 +118,7 @@
                             </a>
                             <a href="#" >
                                 <div class="content">
-                                    <img src="profile.jpg" alt="">
+                                    <img src="{{ url_for('static', filename='Icons/profile.jpg') }}" alt="">
                                     <div class="details">
                                         <span>Username</span>
                                     </div>
@@ -130,7 +130,7 @@
                             </a>
                             <a href="#" >
                                 <div class="content">
-                                    <img src="profile.jpg" alt="">
+                                    <img src="{{ url_for('static', filename='Icons/profile.jpg') }}" alt="">
                                     <div class="details">
                                         <span>Username</span>
                                     </div>
@@ -142,7 +142,7 @@
                             </a>
                             <a href="#" >
                                 <div class="content">
-                                    <img src="profile.jpg" alt="">
+                                    <img src="{{ url_for('static', filename='Icons/profile.jpg') }}" alt="">
                                     <div class="details">
                                         <span>Username</span>
                                     </div>
@@ -212,6 +212,6 @@
 
      </div>
     
-    <script src="script.js" ></script>
+     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

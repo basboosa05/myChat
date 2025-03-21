@@ -7,12 +7,12 @@
 }
 @font-face{
     font-family: homefont;
-    src: url(Fonts/Poppins-Regular.ttf);
+    src: url('/static/Fonts/Poppins-Regular.ttf') format('truetype');
 }
 
 @font-face{
     font-family: headfont;
-    src: url(Fonts/Ramsha.otf);
+    src:url('/static/Fonts/Ramsha.otf') format('opentype');
 }
 
 
