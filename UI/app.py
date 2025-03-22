@@ -1,6 +1,7 @@
 # app.py
 from flask import Flask, render_template, request, redirect,session, url_for, flash
 from models import db, User, Friend, Message 
+from werkzeug.security import generate_password_hash
 
 
 
@@ -84,3 +85,8 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
+
+
+
+
+ 
