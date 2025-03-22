@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, render_template, request, redirect,session, url_for, flash
+from flask import Flask,jsonify, render_template, request, redirect,session, url_for, flash
 from models import db, User, Friend, Message 
 from werkzeug.security import generate_password_hash
 
@@ -21,6 +21,18 @@ def home():
 @app.route('/GoToLogin')
 def GoToLogin():
     return render_template('Login.html')
+
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
+
+@app.route('/friends')
+def friends():
+    return render_template('friends.html')
+
+@app.route('/chats')
+def chats():
+    return render_template('chats.html', friends=friends)
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -65,7 +77,29 @@ def register():
         return redirect(url_for('dashboard'))
 
 
+#get friends
+def get_friends_list(user_id):
+    # Fetch all accepted friends for the logged-in user
+    friends = Friend.query.filter(
+        ((Friend.user_id == user_id) | (Friend.friend_id == user_id)) &
+        (Friend.status == 'accepted')
+    ).all()
 
+    # Get friend details
+    friend_list = []
+    for friend in friends:
+        if friend.user_id == user_id:
+            friend_user = User.query.get(friend.friend_id)
+        else:
+            friend_user = User.query.get(friend.user_id)
+        print("Friend user:", friend_user)
+        friend_list.append({
+            'id': friend_user.id,
+            'username': friend_user.username,
+            'profile_pic': url_for('static', filename='Icons/profile.jpg')  # Default profile picture
+        })
+    
+    return friend_list
     
 
 # goes to home page 
@@ -75,10 +109,38 @@ def dashboard():
         return render_template('index2.html')  # Render the index2.html file
 
 
-@app.route("/Logout")
-def Logout():
+
+
+@app.route("/logout")
+def logout():
     session.pop('username',None)
     return redirect(url_for('GoToLogin'))
+
+
+#retrieve friends dynamically
+@app.route('/friends', methods=['GET'])
+def get_friends():
+    user_id = session.get('user_id')  # Get the logged-in user's ID from the session
+     
+    print("inside freinds route")
+    if not user_id:
+        return jsonify({'error': 'User not logged in'}), 401
+
+    friend_list = get_friends_list(user_id)
+    
+    return jsonify(friend_list)
+
+#retrieve friends on first load
+@app.route('/chat')
+def chat():
+    user_id = session.get('user_id')  # Get the logged-in user's ID from the session
+
+    if not user_id:
+        return redirect(url_for('login'))
+
+    friend_list = get_friends_list(user_id)
+    return render_template('index2.html', friends=friend_list)
+
 
 # Routes and other logic go here
 if __name__ == '__main__':

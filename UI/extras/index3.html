@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Chat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Sidebar -->
+        <nav class="sidebar close">
+            <header>
+                <div class="image-text">
+                    <span class="image">
+                        <img src="{{ url_for('static', filename='Icons/icon.jpg') }}" alt="logo">
+                    </span>
+                    <div class="text header-text">
+                        <span class="name">My chat</span>
+                    </div>
+                </div>
+                <i class='bx bxs-right-arrow toggle'></i>
+            </header>
+            <div class="menu-bar">
+                <div class="menu">
+                    <u1 class="menu-links">
+                        <li class="nav-link">
+                            <a href="#" id="profile-link">
+                                <i class='bx bx-user icon'></i>
+                                <span class="text nav-text">Profile</span>
+                            </a>
+                        </li>
+                        <li class="nav-link">
+                            <a href="#" id="friends-link">
+                                <i class='bx bxs-user-account icon'></i>
+                                <span class="text nav-text">Friends</span>
+                            </a>
+                        </li>
+                        <li class="nav-link">
+                            <a href="#" id="chats-link">
+                                <i class='bx bx-chat icon'></i>
+                                <span class="text nav-text">Chats</span>
+                            </a>
+                        </li>
+                    </u1>
+                </div>
+                <div class="bottom-content">
+                    <li class="">
+                        <a href="{{ url_for('logout') }}" id="logout-link">
+                            <i class='bx bx-log-out icon'></i>
+                            <span class="text nav-text">Logout</span>
+                        </a>
+                    </li>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content Block -->
+        <section class="home">
+            <div class="screen" id="profile-screen" style="display: none;">
+                {% block profile %}{% endblock %}
+            </div>
+            <div class="screen" id="friends-screen" style="display: none;">
+                {% block friends %}{% endblock %}
+            </div>
+            <div class="screen" id="chats-screen" style="display: none;">
+                {% block chats %}{% endblock %}
+            </div>
+        </section>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
