@@ -1,7 +1,7 @@
 # app.py
 from flask import Flask, render_template, request, redirect,session, url_for
 from models import db, User, Friend, Message 
-from werkzeug.security import generate_password_hash, check_password_hash
+
 
 
 app = Flask(__name__)
@@ -12,9 +12,27 @@ db.init_app(app)  # Initialize db with the app
 
 @app.route("/")
 def home():
-    if "username" in session:
-        return redirect(url_for('index2'))
+        
     return render_template("Login.html")
+
+@app.route('/login', methods=['POST'])
+def login():
+    
+    username = request.form.get('uname')
+    password = request.form.get('password')
+    
+    user=User.query.filter_by(username=username).first()
+    if user and user.check_password(password):
+        session['username']=username
+    else: 
+        return render_template("Login.html")
+   
+    
+
+# goes to home page 
+@app.route('/dashboard')
+def dashboard():
+    return render_template('index2.html')  # Render the index2.html file
 
 # Routes and other logic go here
 if __name__ == '__main__':
