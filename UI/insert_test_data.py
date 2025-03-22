@@ -1,7 +1,7 @@
 from app import app, db
 from models import User, Friend, Message
 from werkzeug.security import generate_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Create the application context
 with app.app_context():
@@ -10,9 +10,9 @@ with app.app_context():
 
     # Insert test users
     print("Inserting users...")
-    user1 = User(username='alice', password_hash=generate_password_hash('alice123'), First_name='Alice', Last_name='Smith')
-    user2 = User(username='bob', password_hash=generate_password_hash('bob123'), First_name='Bob', Last_name='Johnson')
-    user3 = User(username='charlie', password_hash=generate_password_hash('charlie123'), First_name='Charlie', Last_name='Brown')
+    user1 = User(username='john_doe', password_hash=generate_password_hash('john123'), First_name='john', Last_name='Smith')
+    user2 = User(username='jane_smith', password_hash=generate_password_hash('jane123'), First_name='Bob', Last_name='Johnson')
+    user3 = User(username='alex_wong', password_hash=generate_password_hash('alex123'), First_name='Charlie', Last_name='Brown')
 
     db.session.add(user1)
     db.session.add(user2)
@@ -22,21 +22,27 @@ with app.app_context():
 
     # Insert test friend relationships
     print("Inserting friends...")
-    friend1 = Friend(user_id=user1.id, friend_id=user2.id, status='accepted')  # Alice and Bob are friends
-    friend2 = Friend(user_id=user1.id, friend_id=user3.id, status='pending')   # Alice sent a request to Charlie
-    friend3 = Friend(user_id=user2.id, friend_id=user3.id, status='accepted') # Bob and Charlie are friends
+    friend1 = Friend(user_id=user1.id, friend_id=user2.id, status='accepted')  
+    friend2 = Friend(user_id=user1.id, friend_id=user3.id, status='pending')   
+    friend3 = Friend(user_id=user2.id, friend_id=user3.id, status='accepted')
+    friend4 = Friend(user_id=user1.id, friend_id=1, status='accepted') 
+    friend5 = Friend(user_id=user1.id, friend_id=2, status='accepted') 
+    friend6 = Friend(user_id=user1.id, friend_id=3, status='accepted') 
 
     db.session.add(friend1)
     db.session.add(friend2)
     db.session.add(friend3)
+    db.session.add(friend4)
+    db.session.add(friend5)
+    db.session.add(friend6)
     db.session.commit()
     print("Friends inserted successfully!")
 
     # Insert test messages
     print("Inserting messages...")
-    message1 = Message(sender_id=user1.id, receiver_id=user2.id, message='Hello Bob!')
-    message2 = Message(sender_id=user2.id, receiver_id=user1.id, message='Hi Alice!')
-    message3 = Message(sender_id=user1.id, receiver_id=user3.id, message='Hey Charlie, how are you?')
+    message1 = Message(sender_id=user1.id, receiver_id=user2.id, message='Hello Bob!',timestamp=datetime.now() - timedelta(days=2))
+    message2 = Message(sender_id=user2.id, receiver_id=user1.id, message='Hi Alice!',timestamp=datetime.now())
+    message3 = Message(sender_id=user1.id, receiver_id=user3.id, message='Hey Charlie, how are you?',timestamp=datetime.now() - timedelta(days=1))
 
     db.session.add(message1)
     db.session.add(message2)

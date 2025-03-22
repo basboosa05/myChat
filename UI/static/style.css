@@ -276,7 +276,7 @@ body {
   .list-contents a:last-child{
     margin-bottom: 0px;
     border-bottom: none;
-    background-color: rgb(255 221 210);
+   
   }
  
   .list-contents a .messages-dot{
@@ -391,3 +391,22 @@ body {
     opacity: 1;
     pointer-events: auto;
 }
+
+/* friends pages css */
+.status-button button{
+    min-height: 45px;
+    border: none;
+    color: #fff;
+    font-size: 17px;
+    padding: 5px 10px;
+    background: rgb(244 172 183);
+    border-radius: 5px;
+    font-family: homefont;
+  }
+
+  .status-button:disabled {
+    background: grey;
+    cursor: not-allowed;
+    opacity: 0.6;
+} 
+  

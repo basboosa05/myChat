@@ -60,7 +60,27 @@
         
         <section class="home">
                <div class="screen" id="profile-screen">Profile Content</div>
-               <div class="screen" id="friends-screen" style="display: none;">Friends Content</div>
+               <div class="screen" id="friends-screen" style="display: none;">Friends Content
+                <div class="list-contents">
+                    <div class="search">
+                        <input type="text" placeholder="Enter name to search...">
+                        <button><i class='bx bx-search'></i></button>
+                    </div>
+                    
+                        <a href="#">
+                            <div class="content">
+                                <img src="{{ url_for('static', filename='Icons/profile.jpg') }}" alt="">
+                                <div class="details">
+                                    <span>username</span>
+                                </div>
+                            </div>
+                            <div class="status-button">
+                                <button type="button" class="status-btn" data-status="Pending">Pending</button>
+                              </div>
+                        </a>
+                    
+                </div>
+               </div>
             <div class="screen" id="chats-screen" style="display: none;">
                 <div class="chats-container">
                     

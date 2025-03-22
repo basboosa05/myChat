@@ -77,3 +77,4 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('friends-list-container').innerHTML = `<p>Unable to load friends.</p>`;
         });
 });
+
