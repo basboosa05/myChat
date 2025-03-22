@@ -22,18 +22,6 @@ def home():
 def GoToLogin():
     return render_template('Login.html')
 
-@app.route('/profile')
-def profile():
-    return render_template('profile.html')
-
-@app.route('/friends')
-def friends():
-    return render_template('friends.html')
-
-@app.route('/chats')
-def chats():
-    return render_template('chats.html', friends=friends)
-
 @app.route('/login', methods=['POST'])
 def login():
     
@@ -101,6 +89,15 @@ def get_friends_list(user_id):
     
     return friend_list
     
+# retrives friends
+@app.route('/get_friends')
+def get_friends():
+    if "username" in session:
+        current_user = User.query.filter_by(username=session['username']).first()
+        friends_list = get_friends_list(current_user.id)
+        return jsonify(friends_list)
+    else:
+        return jsonify({"error": "User not logged in"}), 401
 
 # goes to home page 
 @app.route('/dashboard')
@@ -117,29 +114,6 @@ def logout():
     return redirect(url_for('GoToLogin'))
 
 
-#retrieve friends dynamically
-@app.route('/friends', methods=['GET'])
-def get_friends():
-    user_id = session.get('user_id')  # Get the logged-in user's ID from the session
-     
-    print("inside freinds route")
-    if not user_id:
-        return jsonify({'error': 'User not logged in'}), 401
-
-    friend_list = get_friends_list(user_id)
-    
-    return jsonify(friend_list)
-
-#retrieve friends on first load
-@app.route('/chat')
-def chat():
-    user_id = session.get('user_id')  # Get the logged-in user's ID from the session
-
-    if not user_id:
-        return redirect(url_for('login'))
-
-    friend_list = get_friends_list(user_id)
-    return render_template('index2.html', friends=friend_list)
 
 
 # Routes and other logic go here

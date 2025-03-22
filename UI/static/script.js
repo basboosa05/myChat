@@ -43,3 +43,37 @@ document.addEventListener('DOMContentLoaded', function() {
         chatsScreen.style.display = 'block';
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    fetch('/get_friends')
+        .then(response => response.json())
+        .then(friends => {
+            const container = document.getElementById('friends-list-container');
+            container.innerHTML = ""; // Clear any existing content
+            
+            if (friends.error) {
+                container.innerHTML = `<p>${friends.error}</p>`;
+            } else {
+                friends.forEach(friend => {
+                    const friendElement = document.createElement('a');
+                    friendElement.href = "#";
+                    friendElement.innerHTML = `
+                        <div class="content">
+                            <img src="${friend.profile_pic}" alt="">
+                            <div class="details">
+                                <span>${friend.username}</span>
+                            </div>
+                        </div>
+                        <div class="messages-dot">
+                            <i class='bx bxs-circle'></i>
+                        </div>
+                    `;
+                    container.appendChild(friendElement);
+                });
+            }
+        })
+        .catch(err => {
+            console.error("Error fetching friends:", err);
+            document.getElementById('friends-list-container').innerHTML = `<p>Unable to load friends.</p>`;
+        });
+});
