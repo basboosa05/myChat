@@ -8,6 +8,7 @@
  @font-face{
             font-family: headfont;
             src: url('/static/Fonts/Poppins-Regular.ttf') format('truetype');
+          
         }
 *{
   margin: 0;
@@ -125,7 +126,7 @@ body{
   <div class="wrapper">
     <section class="form signup">
       <header>Chat App</header>
-      <form action="#" >
+      <form action="/register"  method="POST" >
        <div class="field input">
             <label>Username </label>
             <input type="text" name="uname" placeholder="Username" required>
@@ -155,7 +156,7 @@ body{
           
         </div>
       </form>
-      <div class="link">Already signed up? <a href="Login.html">Login now</a></div>
+      <div class="link">Already signed up? <a href="{{ url_for('GoToLogin') }}">Login now</a></div>
     </section>
   </div>
 </body>

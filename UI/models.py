@@ -6,7 +6,7 @@ db = SQLAlchemy()  # Initialize db here (without app)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
+    password_hash = db.Column(db.String(150), nullable=False)
     First_name= db.Column(db.String(80), nullable=False)
     Last_name= db.Column(db.String(80), nullable=False)
     # image should be there but later because I don't get how it should be stored
