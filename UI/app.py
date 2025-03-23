@@ -114,6 +114,33 @@ def logout():
     return redirect(url_for('GoToLogin'))
 
 
+# retrieve messages
+@app.route('/get_messages/<int:friend_id>', methods=['GET'])
+def get_messages(friend_id):
+    if "username" in session:
+        current_user = User.query.filter_by(username=session['username']).first()
+        if not current_user:
+            return jsonify({"error": "User not found"}), 404
+
+        # Fetch messages between the current user and the selected friend, ordered by timestamp
+        messages = Message.query.filter(
+            ((Message.sender_id == current_user.id) & (Message.receiver_id == friend_id)) |
+            ((Message.sender_id == friend_id) & (Message.receiver_id == current_user.id))
+        ).order_by(Message.timestamp).all()
+
+        # Format messages for JSON response
+        message_list = [
+            {
+                "content": message.message ,
+                "is_outgoing": message.sender_id == current_user.id,  # True if the current user is the sender
+                "timestamp": message.timestamp.strftime('%Y-%m-%d %H:%M:%S')  # Format timestamp
+            }
+            for message in messages
+        ]
+        return jsonify(message_list)
+    else:
+        return jsonify({"error": "User not logged in"}), 401
+
 
 
 # Routes and other logic go here

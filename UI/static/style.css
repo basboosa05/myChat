@@ -325,11 +325,11 @@ body {
                 0rem 16px 16px -16px rgb(0 0 0 / 10%);
 }
 
-.chat-box .outgoing {
+.chat-box.outgoing {
     display: flex;
 }
 
-.chat-box .outgoing .details {
+.chat-box.outgoing .details {
     margin-left: auto;
     max-width: calc(100% - 130px);
 }

@@ -12,12 +12,12 @@ tables = cursor.fetchall()
 print("Tables in the database:", tables)
 
 # View all rows in a specific table
-table_name = 'Friend'  # Replace with your table name
-cursor.execute(f"SELECT * FROM Friend;")
+table_name = 'Message'  # Replace with your table name
+cursor.execute(f"SELECT * FROM Message;")
 rows = cursor.fetchall()
 
 # Print all rows
-print(f"Rows in Friend:")
+print(f"Rows in Message:")
 for row in rows:
     print(row)
 

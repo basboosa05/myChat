@@ -57,6 +57,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 friends.forEach(friend => {
                     const friendElement = document.createElement('a');
                     friendElement.href = "#";
+                    friendElement.setAttribute('data-id', friend.id); // Add friend ID
+                    friendElement.classList.add('friend-item');
                     friendElement.innerHTML = `
                         <div class="content">
                             <img src="${friend.profile_pic}" alt="">
@@ -76,5 +78,46 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Error fetching friends:", err);
             document.getElementById('friends-list-container').innerHTML = `<p>Unable to load friends.</p>`;
         });
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const container = document.getElementById('friends-list-container');
+    const chatBox = document.querySelector('.chat-box'); // Container for displaying messages
+
+    // Delegate click events to the container
+    container.addEventListener('click', function (e) {
+        const friendItem = e.target.closest('.friend-item');
+        if (!friendItem) return; // Click outside friend items
+
+        const friendId = friendItem.getAttribute('data-id');
+
+        // Fetch messages with this friend
+        fetch(`/get_messages/${friendId}`)  //http get request
+            .then(response => response.json())
+            .then(messages => {
+                chatBox.innerHTML = ""; // Clear previous chat
+
+                if (messages.error) {
+                    chatBox.innerHTML = `<p>${messages.error}</p>`;
+                } else {
+                    messages.forEach(msg => {
+                        const messageElement = document.createElement('div');
+                        messageElement.classList.add('chat', msg.is_outgoing ? 'outgoing' : 'incoming');
+                        messageElement.innerHTML = `
+                            <div class="details">
+                                <p>${msg.content}</p>
+                                <span class="timestamp">${msg.timestamp}</span>
+                            </div>
+                        `;
+                        chatBox.appendChild(messageElement);
+                    });
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching messages:", err);
+                chatBox.innerHTML = `<p>Unable to load messages.</p>`;
+            });
+    });
 });
 
