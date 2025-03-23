@@ -278,6 +278,10 @@ body {
     border-bottom: none;
    
   }
+  
+  .list-contents a:hover{
+    background-color: rgb(131, 197, 190);
+}
  
   .list-contents a .messages-dot{
     font-size: 12px;
@@ -410,3 +414,15 @@ body {
     opacity: 0.6;
 } 
   
+.timestamp {
+    display: block;        /* Makes it appear on its own line below the message */
+    font-size: 0.8rem;       /* Smaller font size */
+    color: #999;           /* Light gray color for subtlety */
+    margin-top: 5px;       /* Space above the timestamp */
+    text-align: right;     /* Align right. For incoming you might prefer left. */
+}
+
+
+.chat.incoming .timestamp {
+    text-align: left;
+}

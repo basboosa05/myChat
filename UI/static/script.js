@@ -100,18 +100,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (messages.error) {
                     chatBox.innerHTML = `<p>${messages.error}</p>`;
-                } else {
-                    messages.forEach(msg => {
-                        const messageElement = document.createElement('div');
-                        messageElement.classList.add('chat', msg.is_outgoing ? 'outgoing' : 'incoming');
-                        messageElement.innerHTML = `
-                            <div class="details">
-                                <p>${msg.content}</p>
-                                <span class="timestamp">${msg.timestamp}</span>
-                            </div>
-                        `;
-                        chatBox.appendChild(messageElement);
-                    });
+                } else 
+                {
+                    if (messages.length === 0) {
+                        chatBox.innerHTML = `<p>No messages in this chat yet.</p>`;
+                    } else
+                    {
+                        messages.forEach(msg => {
+                            const messageElement = document.createElement('div');
+                            messageElement.classList.add('chat', msg.is_outgoing ? 'outgoing' : 'incoming');
+                            messageElement.innerHTML = `
+                                <div class="details">
+                                    <p>${msg.content}</p>
+                                    <span class="timestamp">${msg.timestamp}</span>
+                                </div>
+                            `;
+                            chatBox.appendChild(messageElement);
+                        });
+                    }
+                    const messageElement = document.createElement('div');
+                    messageElement.innerHTML = `
+                    <div action="#" class="typing-area">
+                          
+                                    <input type="text" name="message" class="input-field" placeholder="Type a message here..." autocomplete="off">
+                                    <button><i class='bx bxl-telegram'></i></button>
+                                 </div>  `;
+                    chatBox.appendChild(messageElement);
+
                 }
             })
             .catch(err => {
