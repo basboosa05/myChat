@@ -1,7 +1,9 @@
 # app.py
+from datetime import datetime
 from flask import Flask,jsonify, render_template, request, redirect,session, url_for, flash
 from models import db, User, Friend, Message 
 from werkzeug.security import generate_password_hash
+from flask_socketio import SocketIO, send
 
 
 
@@ -12,6 +14,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]=False
 app.config['SESSION_COOKIE_SECURE'] = True  # Only send cookies over HTTPS
 app.config['SESSION_COOKIE_HTTPONLY'] = True  # Prevent client-side script access to cookies
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Prevent CSRF attacks
+socketio = SocketIO(app)
 db.init_app(app)  # Initialize db with the app
 
 @app.route("/")
@@ -99,6 +102,45 @@ def get_friends():
     else:
         return jsonify({"error": "User not logged in"}), 401
 
+
+#send message
+@app.route('/send_message', methods=['POST'])
+def send_message():
+    # Check if user is logged in
+    if "username" not in session:
+        return jsonify({"error": "User not logged in"}), 401
+
+    current_user = User.query.filter_by(username=session['username']).first()
+    if not current_user:
+        return jsonify({"error": "User not found"}), 404
+
+    # Get the message data from the JSON payload
+    data = request.get_json()
+    content = data.get('content')
+    receiver_id = data.get('receiver_id')
+
+    if not content or not receiver_id:
+        return jsonify({"error": "Invalid data"}), 400
+
+    # Create a new message. Be sure your Message model has these fields.
+    new_message = Message(
+        message=content,
+        sender_id=current_user.id,
+        receiver_id=receiver_id,
+        timestamp=datetime.now()
+    )
+
+    # Save the new message to the database
+    db.session.add(new_message)
+    db.session.commit()
+    
+    # Return the new message in JSON format so the client can update the UI
+    return jsonify({
+        "content": new_message.message,
+        "is_outgoing": True,  # The new message is always outgoing for the current user
+        "timestamp": new_message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+    })
+
 # goes to home page 
 @app.route('/dashboard')
 def dashboard():
@@ -147,7 +189,7 @@ def get_messages(friend_id):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    socketio.run(app, debug=True)
 
 
 

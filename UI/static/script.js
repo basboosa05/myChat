@@ -81,31 +81,113 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+// document.addEventListener("DOMContentLoaded", function () {
+//     const container = document.getElementById('friends-list-container');
+//     const chatBox = document.querySelector('.chat-box'); // Container for displaying messages
+
+//     // Delegate click events to the container
+//     container.addEventListener('click', function (e) {
+//         const friendItem = e.target.closest('.friend-item');
+//         if (!friendItem) return; // Click outside friend items
+
+//         const friendId = friendItem.getAttribute('data-id');
+
+//         // Fetch messages with this friend
+//         fetch(`/get_messages/${friendId}`)  //http get request
+//             .then(response => response.json())
+//             .then(messages => {
+//                 chatBox.innerHTML = ""; // Clear previous chat
+
+//                 if (messages.error) {
+//                     chatBox.innerHTML = `<p>${messages.error}</p>`;
+//                 } else 
+//                 {
+//                     if (messages.length === 0) {
+//                         chatBox.innerHTML = `<p>No messages in this chat yet.</p>`;
+//                     } else
+//                     {
+//                         messages.forEach(msg => {
+//                             const messageElement = document.createElement('div');
+//                             messageElement.classList.add('chat', msg.is_outgoing ? 'outgoing' : 'incoming');
+//                             messageElement.innerHTML = `
+//                                 <div class="details">
+//                                     <p>${msg.content}</p>
+//                                     <span class="timestamp">${msg.timestamp}</span>
+//                                 </div>
+//                             `;
+//                             chatBox.appendChild(messageElement);
+//                         });
+//                     }
+//                     const messageElement = document.createElement('div');
+//                     messageElement.innerHTML = `
+//                     <div action="#" class="typing-area">
+                          
+//                                     <input type="text" name="message" class="input-field" placeholder="Type a message here..." autocomplete="off">
+//                                     <button><i class='bx bxl-telegram'></i></button>
+//                                  </div>  `;
+//                     chatBox.appendChild(messageElement);
+
+//                 }
+//             })
+//             .catch(err => {
+//                 console.error("Error fetching messages:", err);
+//                 chatBox.innerHTML = `<p>Unable to load messages.</p>`;
+//             });
+//     });
+// });
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const container = document.getElementById('friends-list-container');
     const chatBox = document.querySelector('.chat-box'); // Container for displaying messages
+    let currentFriendId = null; // This will store the current chat friend ID
+    const socket = io.connect('http://127.0.0.1:5000'); 
 
-    // Delegate click events to the container
+    // Listen for incoming messages from the server
+    socket.on('new_message', function (msg) {
+        // Only update the chat if the incoming message is for the currently active conversation
+        if (msg.friend_id == currentFriendId) {
+            const messageElement = document.createElement('div');
+            // Determine the message type: if 'is_outgoing' true then outgoing else incoming.
+            messageElement.classList.add('chat', msg.is_outgoing ? 'outgoing' : 'incoming');
+            messageElement.innerHTML = `
+                <div class="details">
+                    <p>${msg.content}</p>
+                    <span class="timestamp">${msg.timestamp}</span>
+                </div>
+            `;
+            // Insert the new message before the typing area
+            const typingArea = chatBox.querySelector('.typing-area');
+            chatBox.insertBefore(messageElement, typingArea);
+            // Optionally scroll to the bottom so the new message is in view
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    });
+
+    // Delegate click events to the friends list container
     container.addEventListener('click', function (e) {
         const friendItem = e.target.closest('.friend-item');
-        if (!friendItem) return; // Click outside friend items
+        if (!friendItem) return; // Exit if click is outside friend items
+        // Save the friend ID from the data-id attribute
+        currentFriendId = friendItem.getAttribute('data-id');
+        // Fetch messages for this friend
+        fetchMessages(currentFriendId);
+    });
 
-        const friendId = friendItem.getAttribute('data-id');
-
-        // Fetch messages with this friend
-        fetch(`/get_messages/${friendId}`)  //http get request
+    // Fetch messages for a given friend ID
+    function fetchMessages(friendId) {
+        fetch(`/get_messages/${friendId}`)
             .then(response => response.json())
             .then(messages => {
-                chatBox.innerHTML = ""; // Clear previous chat
+                chatBox.innerHTML = ""; // Clear previous chat messages
 
                 if (messages.error) {
                     chatBox.innerHTML = `<p>${messages.error}</p>`;
-                } else 
-                {
+                } else {
+                    // If no messages exist, show a placeholder message
                     if (messages.length === 0) {
                         chatBox.innerHTML = `<p>No messages in this chat yet.</p>`;
-                    } else
-                    {
+                    } else {
                         messages.forEach(msg => {
                             const messageElement = document.createElement('div');
                             messageElement.classList.add('chat', msg.is_outgoing ? 'outgoing' : 'incoming');
@@ -118,21 +200,93 @@ document.addEventListener("DOMContentLoaded", function () {
                             chatBox.appendChild(messageElement);
                         });
                     }
-                    const messageElement = document.createElement('div');
-                    messageElement.innerHTML = `
-                    <div action="#" class="typing-area">
-                          
-                                    <input type="text" name="message" class="input-field" placeholder="Type a message here..." autocomplete="off">
-                                    <button><i class='bx bxl-telegram'></i></button>
-                                 </div>  `;
-                    chatBox.appendChild(messageElement);
-
+                    // Append the typing area to the chat box below the messages
+                    appendTypingArea();
                 }
             })
             .catch(err => {
                 console.error("Error fetching messages:", err);
                 chatBox.innerHTML = `<p>Unable to load messages.</p>`;
             });
-    });
+    }
+
+    // Append the typing area to the chat box (if not already added)
+    function appendTypingArea() {
+        console.log("appendTypingArea called"); 
+        let typingArea = chatBox.querySelector(".typing-area");
+        if (!typingArea) {
+            typingArea = document.createElement("div");
+            typingArea.classList.add("typing-area");
+            typingArea.innerHTML = `
+                <input type="text" name="message" class="input-field" placeholder="Type a message here..." autocomplete="off">
+                <button class="send-btn"><i class='bx bxl-telegram'></i></button>
+            `;
+            chatBox.appendChild(typingArea);
+            
+            // Attach event listener to the send button
+            const sendButton = typingArea.querySelector(".send-btn");
+            console.log(sendButton);
+            sendButton.addEventListener("click", function () {
+                console.log("inside the event listener of button");
+                const inputField = typingArea.querySelector(".input-field");
+                const messageContent = inputField.value.trim();
+                if (!messageContent) return;
+                sendMessage(messageContent);
+                inputField.value = ""; // Clear the input field after sending
+            });
+        }
+    }
+
+    // Post a new message and update the chat
+    function sendMessage(content) {
+        fetch("/send_message", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                content: content,
+                receiver_id: currentFriendId
+            })
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result.error) {
+                    console.error("Error sending message:", result.error);
+                } else {
+                    // Create the new outgoing message element
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('chat', 'outgoing');
+                    messageElement.innerHTML = `
+                        <div class="details">
+                            <p>${result.content}</p>
+                            <span class="timestamp">${result.timestamp}</span>
+                        </div>
+                    `;
+                    // Insert the new message above the typing area
+                    const typingArea = chatBox.querySelector(".typing-area");
+                    chatBox.insertBefore(messageElement, typingArea);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+
+                    // Optionally, emit a socket event so other connected clients can update their chat windows
+                    socket.emit('message_sent', {
+                        receiver_id: currentFriendId,
+                        message: result.content,
+                        timestamp: result.timestamp,
+                        is_outgoing: true
+                    });
+                }
+            })
+            .catch(err => {
+                console.error("Error sending message:", err);
+            });
+    }
+
+    // Optionally, you can set up periodic polling with setInterval as a fallback if WebSockets fail or for extra safety:
+    // setInterval(() => {
+    //     if (currentFriendId) {
+    //         fetchMessages(currentFriendId);
+    //     }
+    // }, 5000);
 });
 
