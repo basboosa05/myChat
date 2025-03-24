@@ -145,11 +145,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Listen for incoming messages from the server
     socket.on('new_message', function (msg) {
-        // Only update the chat if the incoming message is for the currently active conversation
-        if (msg.friend_id == currentFriendId) {
+        // Determine conversation partner's id.
+        let conversationPartnerId;
+        if (msg.sender_id === window.myUserId) {
+            conversationPartnerId = msg.receiver_id;
+        } else {
+            conversationPartnerId = msg.sender_id;
+        }
+    
+        // Only update the chat if the new message belongs to the currently open conversation:
+        if (currentFriendId && parseInt(currentFriendId) === conversationPartnerId) {
+            // Determine whether this message is outgoing:
+            const isOutgoing = (msg.sender_id === window.myUserId);
             const messageElement = document.createElement('div');
-            // Determine the message type: if 'is_outgoing' true then outgoing else incoming.
-            messageElement.classList.add('chat', msg.is_outgoing ? 'outgoing' : 'incoming');
+            messageElement.classList.add('chat', isOutgoing ? 'outgoing' : 'incoming');
             messageElement.innerHTML = `
                 <div class="details">
                     <p>${msg.content}</p>
@@ -159,11 +168,10 @@ document.addEventListener("DOMContentLoaded", function () {
             // Insert the new message before the typing area
             const typingArea = chatBox.querySelector('.typing-area');
             chatBox.insertBefore(messageElement, typingArea);
-            // Optionally scroll to the bottom so the new message is in view
             chatBox.scrollTop = chatBox.scrollHeight;
         }
     });
-
+    
     // Delegate click events to the friends list container
     container.addEventListener('click', function (e) {
         const friendItem = e.target.closest('.friend-item');
@@ -225,14 +233,14 @@ document.addEventListener("DOMContentLoaded", function () {
             
             // Attach event listener to the send button
             const sendButton = typingArea.querySelector(".send-btn");
-            console.log(sendButton);
+            //console.log(sendButton);  debug
             sendButton.addEventListener("click", function () {
-                console.log("inside the event listener of button");
+               // console.log("inside the event listener of button"); debug
                 const inputField = typingArea.querySelector(".input-field");
                 const messageContent = inputField.value.trim();
                 if (!messageContent) return;
                 sendMessage(messageContent);
-                inputField.value = ""; // Clear the input field after sending
+                inputField.value = ""; // Clear the box after sending the message 
             });
         }
     }
@@ -268,13 +276,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     chatBox.insertBefore(messageElement, typingArea);
                     chatBox.scrollTop = chatBox.scrollHeight;
 
-                    // Optionally, emit a socket event so other connected clients can update their chat windows
-                    socket.emit('message_sent', {
-                        receiver_id: currentFriendId,
-                        message: result.content,
-                        timestamp: result.timestamp,
-                        is_outgoing: true
-                    });
+                    // // Optionally, emit a socket event so other connected clients can update their chat windows
+                    // socket.emit('message_sent', {
+                    //     receiver_id: currentFriendId,
+                    //     message: result.content,
+                    //     timestamp: result.timestamp,
+                    //     is_outgoing: true
+                    // });
                 }
             })
             .catch(err => {

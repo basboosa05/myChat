@@ -3,7 +3,8 @@ from datetime import datetime
 from flask import Flask,jsonify, render_template, request, redirect,session, url_for, flash
 from models import db, User, Friend, Message 
 from werkzeug.security import generate_password_hash
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO
+from flask_socketio import emit
 
 
 
@@ -134,18 +135,29 @@ def send_message():
     db.session.add(new_message)
     db.session.commit()
     
-    # Return the new message in JSON format so the client can update the UI
-    return jsonify({
+    message_data = {
         "content": new_message.message,
+        "sender_id": current_user.id,
+        "receiver_id": receiver_id,
+        "timestamp": new_message.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
         "is_outgoing": True,  # The new message is always outgoing for the current user
-        "timestamp": new_message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
-    })
+    }
+    
+    # Emit the event to all connected clients.
+    socketio.emit('new_message', message_data)
+
+
+    
+    return jsonify(message_data)
 
 # goes to home page 
 @app.route('/dashboard')
 def dashboard():
     if "username" in session:
-        return render_template('index2.html')  # Render the index2.html file
+        current_user = User.query.filter_by(username=session['username']).first()
+        return render_template('index2.html', current_user=current_user)
+    else:
+        return redirect(url_for('GoToLogin'))
 
 
 
@@ -164,7 +176,7 @@ def get_messages(friend_id):
         if not current_user:
             return jsonify({"error": "User not found"}), 404
 
-        # Fetch messages between the current user and the selected friend, ordered by timestamp
+        
         messages = Message.query.filter(
             ((Message.sender_id == current_user.id) & (Message.receiver_id == friend_id)) |
             ((Message.sender_id == friend_id) & (Message.receiver_id == current_user.id))
