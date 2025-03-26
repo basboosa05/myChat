@@ -262,6 +262,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (result.error) {
                     console.error("Error sending message:", result.error);
                 } else {
+                    const placeholder = chatBox.querySelector("p");
+                if (placeholder && placeholder.textContent.trim() === "No messages in this chat yet.") {
+                    placeholder.remove();
+                }
                     // Create the new outgoing message element
                     const messageElement = document.createElement('div');
                     messageElement.classList.add('chat', 'outgoing');
