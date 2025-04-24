@@ -6,13 +6,15 @@ from werkzeug.security import generate_password_hash
 from flask_socketio import SocketIO
 from flask_socketio import emit
 
-
+import os 
+database_url = os.getenv('DATABASE_URL')
+secret_key = os.getenv('SECRET_KEY')
 
 app = Flask(__name__)
-app.secret_key="your_secret_key"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///chat.db'
+app.secret_key=secret_key
+app.config['SQLALCHEMY_DATABASE_URI'] =database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]=False
-app.config['SESSION_COOKIE_SECURE'] = True  # Only send cookies over HTTPS
+app.config['SESSION_COOKIE_SECURE'] = os.getenv('FLASK_ENV') == 'production'
 app.config['SESSION_COOKIE_HTTPONLY'] = True  # Prevent client-side script access to cookies
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Prevent CSRF attacks
 socketio = SocketIO(app)
@@ -201,7 +203,7 @@ def get_messages(friend_id):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=False)
 
 
 
